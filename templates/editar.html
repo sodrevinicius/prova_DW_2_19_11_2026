@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block titulo %}Editar sala{% endblock %}
+
+{% block conteudo %}
+
+  <h2>Editar sala</h2>
+
+  <form method="post">
+    <input name="nome" value="{{ sala.nome }}" required>
+    <input name="bloco" value="{{ sala.bloco }}">
+    <input name="capacidade" value="{{ sala.capacidade }}">
+    <button type="submit">Salvar</button>
+  </form>
+
+  <p><a href="{{ url_for('sala.index') }}">Cancelar</a></p>
+
+{% endblock %}

@@ -1,0 +1,622 @@
+/* =====================================================================
+   Folha de estilo — Prova Pratica Individual de DW2
+   =====================================================================
+
+   Arquivos desta pasta sao servidos COMO ESTAO: o servidor nao os monta,
+   apenas os entrega. Por isso nao ha marcacoes de template aqui.
+
+   Esta folha estiliza APENAS a marcacao que ja existe nos templates.
+   Nenhuma regra depende de classe nova, de ordem de elementos ou de
+   codigo que voce ainda vai escrever — ela funciona do jeito que o
+   projeto chega ate voce, e continua funcionando depois dos seus itens.
+
+   Organizacao:
+     1. Tokens          8. Botoes
+     2. Base            9. Barra assincrona
+     3. Cabecalho      10. Contagem e meta
+     4. Conteudo       11. Listagem
+     5. Titulos        12. Rodape
+     6. Avisos         13. Acessibilidade
+     7. Formularios
+
+   Nao ha animacao de entrada: a pagina aparece pronta. O unico
+   movimento e a resposta ao toque — hover e foco —, com transicoes
+   curtas, que somem para quem pediu menos movimento no sistema.
+   ===================================================================== */
+
+
+/* ------------------------------------------------- 1. Tokens ------- */
+/* Uma variavel por decisao. Mudar a identidade inteira e mudar daqui. */
+
+:root {
+  /* Marca */
+  --azul:          #004a8b;
+  --azul-escuro:   #00335f;
+  --azul-claro:    #e8f0f9;
+  --laranja:       #f47210;
+  --laranja-claro: #fff1e4;
+
+  /* Superficies */
+  --fundo:         #f1f4f8;
+  --superficie:    #ffffff;
+  --superficie-2:  #f7f9fc;
+
+  /* Texto */
+  --tinta:         #1b2430;
+  --tinta-media:   #4a5668;
+  --tinta-fraca:   #6b7688;
+
+  /* Linhas */
+  --borda:         #dde4ed;
+  --borda-forte:   #c3cfdd;
+
+  /* Estados */
+  --perigo:        #a4161a;
+  --perigo-fundo:  #fdf0f0;
+  --sucesso:       #1b7a46;
+
+  /* Medidas */
+  --raio:          10px;
+  --raio-pequeno:  7px;
+  --largura:       920px;
+
+  /* Sombras: discretas, em azul, nunca em preto puro */
+  --sombra-1: 0 1px 2px rgba(16, 38, 66, 0.06);
+  --sombra-2: 0 1px 3px rgba(16, 38, 66, 0.08), 0 6px 16px rgba(16, 38, 66, 0.07);
+  --sombra-3: 0 2px 6px rgba(16, 38, 66, 0.10), 0 12px 28px rgba(16, 38, 66, 0.10);
+
+  /* Movimento */
+  --transicao:       140ms ease;
+  --transicao-lenta: 260ms ease;
+
+  /* Curva de desaceleracao: rapida no comeco, suave no fim.
+     E o que faz a animacao parecer natural em vez de mecanica. */
+  --curva: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+
+/* --------------------------------------------------- 2. Base ------- */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: light;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  /* Pilha de fontes do sistema: nada e baixado da rede, entao a pagina
+     abre igual em qualquer maquina do laboratorio, mesmo sem internet. */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+               "Helvetica Neue", Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--tinta);
+  background-color: var(--fundo);
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--azul);
+  text-decoration-color: var(--borda-forte);
+  text-underline-offset: 2px;
+  transition: color var(--transicao);
+}
+
+a:hover {
+  color: var(--azul-escuro);
+  text-decoration-color: currentColor;
+}
+
+strong {
+  font-weight: 650;
+}
+
+
+/* ---------------------------------------------- 3. Cabecalho ------- */
+
+header {
+  background: var(--azul);
+  color: #ffffff;
+  padding: 0 28px;
+  box-shadow: var(--sombra-2);
+  position: relative;
+  z-index: 1;
+}
+
+/* Filete da marca, no rodape da barra */
+header::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3px;
+  background: var(--laranja);
+}
+
+/* A barra e uma linha so: titulo a esquerda, identidade a direita.
+   Em tela estreita ela quebra sozinha. */
+header h1 {
+  margin: 0;
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+header h1,
+header .saudacao,
+header nav {
+  max-width: var(--largura);
+  margin-inline: auto;
+}
+
+header h1 {
+  padding: 18px 0 0;
+}
+
+header nav,
+header .saudacao {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 10px 0 16px;
+  font-size: 14px;
+}
+
+/* O sublinhado do menu cresce do centro para as pontas. Ele e um
+   pseudo-elemento, e nao uma borda, justamente para poder ser animado. */
+header nav a {
+  position: relative;
+  color: rgba(255, 255, 255, 0.88);
+  text-decoration: none;
+  padding: 4px 0;
+}
+
+header nav a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: var(--laranja);
+  transform: scaleX(0);
+  transition: transform var(--transicao-lenta) var(--curva);
+}
+
+header nav a:hover {
+  color: #ffffff;
+}
+
+header nav a:hover::after {
+  transform: scaleX(1);
+}
+
+/* Nome de quem entrou, em forma de etiqueta */
+header .saudacao > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 999px;
+  padding: 4px 14px;
+  font-weight: 550;
+}
+
+header .saudacao > span::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #7fe0a8;
+}
+
+header .saudacao form {
+  margin: 0;
+  margin-left: auto;
+}
+
+
+/* ------------------------------------------------ 4. Conteudo ------ */
+
+main {
+  flex: 1;
+  width: 100%;
+  max-width: var(--largura);
+  margin: 0 auto;
+  padding: 32px 28px 56px;
+}
+
+
+/* ------------------------------------------------- 5. Titulos ------ */
+
+h2 {
+  font-size: 15px;
+  font-weight: 650;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--tinta-media);
+  margin: 36px 0 14px;
+}
+
+/* O primeiro titulo nao precisa do respiro de cima */
+main > h2:first-child {
+  margin-top: 4px;
+}
+
+
+/* -------------------------------------------------- 6. Avisos ------ */
+/* Mensagem vinda do flash do Flask. */
+
+.aviso {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: var(--laranja-claro);
+  border: 1px solid #f8d6b4;
+  border-radius: var(--raio);
+  color: #7a3b05;
+  font-size: 15px;
+  margin: 0 0 16px;
+  padding: 12px 16px;
+}
+
+.aviso::before {
+  content: "";
+  flex: none;
+  width: 8px;
+  height: 8px;
+  margin-top: 8px;
+  border-radius: 50%;
+  background: var(--laranja);
+}
+
+
+/* -------------------------------------------- 7. Formularios ------- */
+
+/* O formulario de registro (listagem e edicao): campos lado a lado,
+   dentro de um cartao. Em tela estreita eles empilham sozinhos. */
+main > form {
+  background: var(--superficie);
+  border: 1px solid var(--borda);
+  border-radius: var(--raio);
+  box-shadow: var(--sombra-1);
+  padding: 18px;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  transition: border-color var(--transicao-lenta), box-shadow var(--transicao-lenta);
+}
+
+main > form > input {
+  flex: 1 1 170px;
+  min-width: 0;
+}
+
+main > form > button {
+  flex: none;
+}
+
+/* O cartao do formulario se destaca enquanto algum campo dele tem o foco */
+main > form:focus-within {
+  border-color: var(--borda-forte);
+  box-shadow: var(--sombra-2);
+}
+
+/* O formulario de entrada e o de criar conta: campos empilhados,
+   em uma coluna estreita e centrada. */
+main > form.formulario {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 16px;
+  max-width: 400px;
+  padding: 26px;
+  box-shadow: var(--sombra-2);
+}
+
+.formulario label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--tinta-media);
+}
+
+.formulario input {
+  width: 100%;
+}
+
+/* O paragrafo que vem depois do formulario ("Ja tem conta?") */
+main > form.formulario + p {
+  max-width: 400px;
+  color: var(--tinta-media);
+  font-size: 14.5px;
+  margin: 16px 0 0;
+}
+
+input {
+  font: inherit;
+  font-size: 15px;
+  color: var(--tinta);
+  background: var(--superficie);
+  border: 1px solid var(--borda-forte);
+  border-radius: var(--raio-pequeno);
+  padding: 10px 13px;
+  min-height: 44px;
+  transition: border-color var(--transicao), box-shadow var(--transicao);
+}
+
+input::placeholder {
+  color: var(--tinta-fraca);
+}
+
+input:hover {
+  border-color: #a9b8ca;
+}
+
+input:focus {
+  outline: none;
+  border-color: var(--azul);
+  box-shadow: 0 0 0 3px rgba(0, 74, 139, 0.16);
+}
+
+
+/* -------------------------------------------------- 8. Botoes ------ */
+/* Uma base para todos; a aparencia muda conforme o lugar em que o
+   botao esta, porque os templates nao usam classe em botao nenhum. */
+
+button {
+  font: inherit;
+  font-size: 14.5px;
+  font-weight: 600;
+  line-height: 1.2;
+  min-height: 44px;
+  padding: 11px 20px;
+  border: 1px solid transparent;
+  border-radius: var(--raio-pequeno);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color var(--transicao), border-color var(--transicao),
+              color var(--transicao), box-shadow var(--transicao),
+              transform var(--transicao);
+}
+
+button:active {
+  transform: translateY(1px);
+}
+
+/* Principal: enviar o formulario */
+main > form button {
+  background: var(--azul);
+  border-color: var(--azul);
+  color: #ffffff;
+  box-shadow: var(--sombra-1);
+}
+
+main > form button:hover {
+  background: var(--azul-escuro);
+  border-color: var(--azul-escuro);
+  box-shadow: var(--sombra-3);
+  transform: translateY(-1px);
+}
+
+/* Secundario: a acao da barra assincrona */
+.assincrono button {
+  background: var(--superficie);
+  border-color: var(--borda-forte);
+  color: var(--azul-escuro);
+  box-shadow: var(--sombra-1);
+}
+
+.assincrono button:hover {
+  background: var(--azul-claro);
+  border-color: var(--azul);
+  box-shadow: var(--sombra-2);
+  transform: translateY(-1px);
+}
+
+/* Discreto, sobre o azul do cabecalho: sair */
+.saudacao button {
+  background: transparent;
+  border-color: rgba(255, 255, 255, 0.4);
+  color: #ffffff;
+  min-height: 34px;
+  padding: 6px 16px;
+  font-size: 13.5px;
+}
+
+.saudacao button:hover {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: #ffffff;
+}
+
+/* Destrutivo, dentro de um item da lista: excluir */
+li button {
+  background: transparent;
+  border-color: transparent;
+  color: var(--perigo);
+  min-height: 34px;
+  padding: 5px 12px;
+  font-size: 13.5px;
+}
+
+li button:hover {
+  background: var(--perigo-fundo);
+  border-color: #efc9c9;
+}
+
+
+/* ------------------------------------- 9. Barra assincrona --------- */
+/* O botao que pede dados ao servidor, e a linha onde o JavaScript
+   escreve o resultado. Reservamos a altura da linha para que a pagina
+   nao salte quando a mensagem aparecer. */
+
+.assincrono {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+  background: var(--superficie-2);
+  border: 1px solid var(--borda);
+  border-radius: var(--raio);
+  padding: 12px 16px;
+  margin-bottom: 14px;
+}
+
+.aviso-js {
+  margin: 0;
+  min-height: 20px;
+  font-size: 14px;
+  color: var(--tinta-media);
+}
+
+
+/* ------------------------------------- 10. Contagem e meta --------- */
+
+.contagem {
+  margin: 0 0 12px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--tinta-media);
+}
+
+.escopos {
+  margin: 28px 0 0;
+  padding-top: 16px;
+  border-top: 1px solid var(--borda);
+  font-size: 14px;
+  color: var(--tinta-media);
+}
+
+.escopos strong {
+  display: inline-block;
+  min-width: 28px;
+  padding: 2px 9px;
+  margin-left: 4px;
+  border-radius: 999px;
+  background: var(--azul-claro);
+  color: var(--azul-escuro);
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+
+
+/* ----------------------------------------------- 11. Listagem ------ */
+
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 12px;
+  background: var(--superficie);
+  border: 1px solid var(--borda);
+  border-radius: var(--raio);
+  box-shadow: var(--sombra-1);
+  padding: 14px 16px;
+  color: var(--tinta-media);
+  font-size: 15px;
+  transition: border-color var(--transicao), box-shadow var(--transicao);
+}
+
+li:hover {
+  border-color: var(--borda-forte);
+  box-shadow: var(--sombra-2);
+  transform: translateY(-1px);
+}
+
+li strong {
+  font-size: 16px;
+  font-weight: 650;
+  color: var(--tinta);
+}
+
+/* "editar" e "excluir" vao para a direita, juntos */
+li a {
+  margin-left: auto;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  padding: 5px 12px;
+  border-radius: var(--raio-pequeno);
+}
+
+li a:hover {
+  background: var(--azul-claro);
+}
+
+li form {
+  margin: 0;
+}
+
+
+/* ------------------------------------------------- 12. Rodape ------ */
+
+footer {
+  border-top: 1px solid var(--borda);
+  background: var(--superficie);
+  color: var(--tinta-fraca);
+  font-size: 13px;
+  text-align: center;
+  padding: 20px 28px;
+}
+
+
+/* ----------------------------------------- 13. Acessibilidade ------ */
+
+/* Anel de foco visivel para quem navega pelo teclado */
+:where(a, button, input):focus-visible {
+  outline: 2px solid var(--azul);
+  outline-offset: 2px;
+}
+
+header :where(a, button):focus-visible {
+  outline-color: #ffffff;
+}
+
+/* Quem pediu menos movimento no sistema nao ve transicao nenhuma.
+   A duracao vira quase zero, e nao "none", para que o estado final
+   seja aplicado de imediato. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Telas estreitas */
+@media (max-width: 640px) {
+  header, main {
+    padding-inline: 18px;
+  }
+
+  main > form > input,
+  main > form > button {
+    flex: 1 1 100%;
+  }
+
+  li a {
+    margin-left: 0;
+  }
+}

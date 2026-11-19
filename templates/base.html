@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <meta charset="utf-8">
+    <title>{% block titulo %}Salas{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  </head>
+
+  <body>
+    <header>
+      <h1>Salas</h1>
+
+      {% if session["usuario_id"] %}
+
+        <div class="saudacao">
+          <span>{{ session["usuario_nome"] }}</span>
+
+          <form method="post" action="{{ url_for('auth.sair') }}">
+            <button type="submit">sair</button>
+          </form>
+        </div>
+
+      {% else %}
+
+        <nav>
+          <a href="{{ url_for('auth.login') }}">Entrar</a>
+          <a href="{{ url_for('auth.cadastro') }}">Criar conta</a>
+          <a href="{{ url_for('sala.index') }}">Salas</a>
+        </nav>
+
+      {% endif %}
+    </header>
+
+    <main>
+      {% for mensagem in get_flashed_messages() %}
+        <p class="aviso">{{ mensagem }}</p>
+      {% endfor %}
+
+      {% block conteudo %}{% endblock %}
+    </main>
+
+    <footer>
+      Desenvolvimento Web II — Prova Prática Individual — versão B
+    </footer>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+  </body>
+</html>

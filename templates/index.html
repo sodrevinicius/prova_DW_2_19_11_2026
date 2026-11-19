@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block titulo %}Salas{% endblock %}
+
+{% block conteudo %}
+
+  <h2>Cadastrar sala</h2>
+
+  <form method="post">
+    <input name="nome" placeholder="Nome" required>
+    <input name="bloco" placeholder="Bloco">
+    <input name="capacidade" placeholder="Capacidade">
+    <button type="submit">Cadastrar</button>
+  </form>
+
+  <h2>Salas</h2>
+
+  <div class="assincrono">
+    <button id="atualizar" type="button">atualizar lista</button>
+    <p class="aviso-js" id="aviso-js"></p>
+  </div>
+
+  <!-- ===== ITEM 2 =====================================================
+       Acima da lista, exiba:
+         - havendo registros, a contagem, no formato:  N registro(s).
+         - nao havendo nenhum, a frase:  Nenhuma sala cadastrada.
+       ================================================================== -->
+
+  <ul id="lista">
+    {% for item in salas %}
+      <li>
+        <strong>{{ item.nome }}</strong>
+        — {{ item.bloco }}
+        — {{ item.capacidade }}
+
+        <a href="{{ url_for('sala.editar', id=item.id) }}">editar</a>
+
+        <form method="post" action="{{ url_for('sala.excluir', id=item.id) }}">
+          <button type="submit">excluir</button>
+        </form>
+      </li>
+    {% endfor %}
+  </ul>
+
+  <p class="escopos">
+    Acessos nesta sessão: <strong id="contador">{{ session["acessos"] }}</strong>
+  </p>
+
+{% endblock %}
